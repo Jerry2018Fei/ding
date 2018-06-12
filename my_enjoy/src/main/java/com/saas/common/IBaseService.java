@@ -1,5 +1,6 @@
-package com.saas.common.base;
+package com.saas.common;
 
+import com.github.pagehelper.PageInfo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,10 +9,12 @@ import java.util.Map;
 /**
  * author  魏鹏
  * date    2017年9月1日
- * title   dao 公共接口
- * descri  根据情况是否继承此 dao接口
+ * title   service 公共接口
+ * describe  根据情况是否继承此 service 接口
+ *
  */
-public interface IBaseDao<T> {
+public interface IBaseService<T> {
+	
 
 	/**
 	 * Auth: dingpengfei
@@ -21,7 +24,7 @@ public interface IBaseDao<T> {
 	 * @return int 返回值
 	 */
 	int insert(T entity);
-
+	
 
 	/**
 	 * Auth: dingpengfei
@@ -31,7 +34,8 @@ public interface IBaseDao<T> {
 	 * @return 操作结果
 	 */
 	int deleteById(Serializable id);
-
+	
+	
 
 	/**
 	 * Auth: dingpengfei
@@ -41,6 +45,7 @@ public interface IBaseDao<T> {
 	 * @return 返回值
 	 */
 	int update(T entity);
+	
 
 	/**
 	 * Auth: dingpengfei
@@ -50,6 +55,7 @@ public interface IBaseDao<T> {
 	 */
 	List<T> getAll();
 
+
 	/**
 	 * Auth: dingpengfei
 	 * Date: 2017/9/4 15:13
@@ -58,15 +64,21 @@ public interface IBaseDao<T> {
 	 * return 实体
 	 */
 	T getById(Serializable id);
+
 	/**
-	 * auth: dingpengfei
-	 * date: 2017/9/4 15:13
-	 * param: params 参数map
-	 * return: list 集合
+	 * Auth: dingpengfei
+	 * Date: 2017/9/4 15:13
+	 * Param: params 参数map
+	 * Return: list 集合
 	 **/
 	List<T> getByParam(Map<String, Object> params);
-
-
+	/**
+	 * Auth: dingpengfei
+	 * Date: 2017/9/4 15:13
+	 * Param: params 参数map
+	 * Return: page 分页信息
+	 **/
+	PageInfo<T> getPageByParam(Map<String, Object> params, Integer pageNum, Integer pageSize);
 	/**
 	 * Auth: dingpengfei
 	 * Date: 2017/10/17 15:53
@@ -74,5 +86,5 @@ public interface IBaseDao<T> {
 	 * Param: map 参数列表
 	 * Return: void
 	 **/
-	int updateByMap(Map<String, Object> map);
+	int updateByMap(Map<String, Object> map) ;
 }

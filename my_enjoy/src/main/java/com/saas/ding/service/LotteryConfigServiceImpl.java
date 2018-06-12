@@ -1,6 +1,6 @@
 package com.saas.ding.service;
 
-import com.saas.common.base.BaseServiceImpl;
+import com.saas.common.BaseServiceImpl;
 import com.saas.ding.dao.LotteryConfigDao;
 import com.saas.ding.entity.LotteryConfig;
 import org.springframework.stereotype.Service;

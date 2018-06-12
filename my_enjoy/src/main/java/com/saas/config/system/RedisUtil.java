@@ -1,6 +1,9 @@
 package com.saas.config.system;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.saas.system.exception.RedisException;
@@ -8,10 +11,21 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -28,20 +42,21 @@ public class RedisUtil {
     private String expireDays;
 
     /**
-     *  添加String 类型 key
-     * @param key key
-     * @param entity value
+     * 添加String 类型 key
+     *
+     * @param key        key
+     * @param entity     value
      * @param needExpire 是否设置过期时间
-     * @param day 多久过期
-     * @param <T> 参数类型
+     * @param day        多久过期
+     * @param <T>        参数类型
      * @throws RedisException 异常
      */
-    public <T> void stringAdd(String key, T entity, Boolean needExpire,Integer day) throws RedisException {
+    public <T> void stringAdd(String key, T entity, Boolean needExpire, Integer day) throws RedisException {
         try {
             Gson gson = new Gson();
             redisTemplate.opsForValue().set(key, gson.toJson(entity), 60000, TimeUnit.MILLISECONDS);
             logger.info(String.format("redis string add:key [%s] value [%s] ", key, JSONObject.toJSONString(entity)));
-            expire(key, needExpire,day);
+            expire(key, needExpire, day);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(String.format("调用 redis string add 异常：%s", e.getMessage()));
@@ -51,7 +66,8 @@ public class RedisUtil {
     }
 
     /**
-     *  get String  类型 value
+     * get String  类型 value
+     *
      * @param key   key
      * @param clazz 类型
      * @throws RedisException 异常
@@ -73,14 +89,15 @@ public class RedisUtil {
     }
 
     /**
-     *  添加 set 类型 key
-     * @param key key
-     * @param value value
+     * 添加 set 类型 key
+     *
+     * @param key        key
+     * @param value      value
      * @param needExpire 是否设置过期时间
-     * @param day 多久过期
+     * @param day        多久过期
      * @throws RedisException 异常
      */
-    public void setAdd(String key,Boolean needExpire,Integer day, String... value) throws RedisException {
+    public void setAdd(String key, Boolean needExpire, Integer day, String... value) throws RedisException {
         try {
             redisTemplate.opsForSet().add(key, value);
             logger.info(String.format("redis set add:key [%s] value [%s] ", key, JSONObject.toJSONString(value)));
@@ -93,8 +110,9 @@ public class RedisUtil {
     }
 
     /**
-     *  根据key获取set
-     * @param key   key
+     * 根据key获取set
+     *
+     * @param key key
      * @throws RedisException 异常
      */
     public Set<String> querySet(String key) throws RedisException {
@@ -110,8 +128,9 @@ public class RedisUtil {
 
 
     /**
-     *  查询set中是否包含某个值
-     * @param key key
+     * 查询set中是否包含某个值
+     *
+     * @param key   key
      * @param value value
      * @throws RedisException 异常
      */
@@ -126,12 +145,13 @@ public class RedisUtil {
     }
 
     /**
-     *  从list中随机取出多少数据
-     * @param key key
+     * 从list中随机取出多少数据
+     *
+     * @param key   key
      * @param count count
      * @throws RedisException 异常
      */
-    public List<String> getRandomValueFromSet(String key,long count) throws RedisException {
+    public List<String> getRandomValueFromSet(String key, long count) throws RedisException {
         try {
             return redisTemplate.opsForSet().randomMembers(key, count);
         } catch (Exception e) {
@@ -142,7 +162,8 @@ public class RedisUtil {
     }
 
     /**
-     *  从list中随机取出多少数据
+     * 从list中随机取出多少数据
+     *
      * @param key key
      * @throws RedisException 异常
      */
@@ -155,15 +176,17 @@ public class RedisUtil {
             throw new RedisException(e, e.getMessage());
         }
     }
+
     /**
-     *  从set中删除value
-     * @param key key
+     * 从set中删除value
+     *
+     * @param key   key
      * @param value value
      * @throws RedisException 异常
      */
-    public void removeValueFormSet(String key,Object... value) throws RedisException {
+    public void removeValueFormSet(String key, Object... value) throws RedisException {
         try {
-            redisTemplate.opsForSet().remove(key,value);
+            redisTemplate.opsForSet().remove(key, value);
             logger.info(String.format("redis set remove:key [%s] value [%s] ", key, JSONObject.toJSONString(value)));
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,14 +197,15 @@ public class RedisUtil {
 
 
     /**
-     *  向list 添加值
-     * @param key key
-     * @param value value
+     * 向list 添加值
+     *
+     * @param key        key
+     * @param value      value
      * @param needExpire 是否设置过期时间
-     * @param day 多久过期
+     * @param day        多久过期
      * @throws RedisException 异常
      */
-    public void listPush(String key,Boolean needExpire,Integer day, String... value) throws RedisException {
+    public void listPush(String key, Boolean needExpire, Integer day, String... value) throws RedisException {
         try {
             redisTemplate.opsForList().leftPushAll(key, value);
             logger.info(String.format("redis list leftPushAll:key [%s] value [%s] ", key, JSONObject.toJSONString(value)));
@@ -194,7 +218,8 @@ public class RedisUtil {
     }
 
     /**
-     *  从list中 出栈一个元素
+     * 从list中 出栈一个元素
+     *
      * @param key key
      * @throws RedisException 异常
      */
@@ -207,17 +232,19 @@ public class RedisUtil {
             throw new RedisException(e, e.getMessage());
         }
     }
+
     /**
-     *  查询list
+     * 查询list
+     *
      * @param key key
      * @throws RedisException 异常
      */
-    public List<String> queryList(String key) throws RedisException{
+    public List<String> queryList(String key) throws RedisException {
         try {
-            if(hasKey(key)){
-                Long size=redisTemplate.opsForList().size(key);
-                if(size>0){
-                    return redisTemplate.opsForList().range(key,0,size);
+            if (hasKey(key)) {
+                Long size = redisTemplate.opsForList().size(key);
+                if (size > 0) {
+                    return redisTemplate.opsForList().range(key, 0, size);
                 }
             }
 
@@ -230,18 +257,19 @@ public class RedisUtil {
     }
 
     /**
-     *  添加 hash 类型 hkey hvalue
-     * @param key key
-     * @param hKey hKey
-     * @param hValue hValue
+     * 添加 hash 类型 hkey hvalue
+     *
+     * @param key        key
+     * @param hKey       hKey
+     * @param hValue     hValue
      * @param needExpire 是否设置过期时间
-     * @param day 多久过期
+     * @param day        多久过期
      * @throws RedisException 异常
      */
-    public void hashAdd(String key, String hKey, String hValue,Boolean needExpire,Integer day) throws RedisException {
+    public void hashAdd(String key, String hKey, String hValue, Boolean needExpire, Integer day) throws RedisException {
         try {
             redisTemplate.opsForHash().put(key, hKey, hValue);
-            logger.info(String.format("redis hash put:key [%s] hKey [%s] value [%s] ", key, hKey,hValue));
+            logger.info(String.format("redis hash put:key [%s] hKey [%s] value [%s] ", key, hKey, hValue));
             expire(key, needExpire, day);
         } catch (Exception e) {
             e.printStackTrace();
@@ -251,14 +279,15 @@ public class RedisUtil {
     }
 
     /**
-     *  添加 hash 类型 hkey hvalue
-     * @param key key
-     * @param map 数据
+     * 添加 hash 类型 hkey hvalue
+     *
+     * @param key        key
+     * @param map        数据
      * @param needExpire 是否设置过期时间
-     * @param day 多久过期
+     * @param day        多久过期
      * @throws RedisException 异常
      */
-    public void hashAddAll(String key, Map<String,String> map,Boolean needExpire,Integer day) throws RedisException {
+    public void hashAddAll(String key, Map<String, String> map, Boolean needExpire, Integer day) throws RedisException {
         try {
             redisTemplate.opsForHash().putAll(key, map);
             logger.info(String.format("redis hash put:key [%s] value [%s] ", key, map));
@@ -269,8 +298,10 @@ public class RedisUtil {
             throw new RedisException(e, e.getMessage());
         }
     }
+
     /**
-     *  hash get
+     * hash get
+     *
      * @param key key
      * @throws RedisException 异常
      */
@@ -285,8 +316,9 @@ public class RedisUtil {
     }
 
     /**
-     *  hash delete
-     * @param key key
+     * hash delete
+     *
+     * @param key  key
      * @param hKey hKey
      * @throws RedisException 异常
      */
@@ -309,21 +341,23 @@ public class RedisUtil {
             throw new RedisException(e, e.getMessage());
         }
     }
+
     /**
-     *  hash getAll
+     * hash getAll
+     *
      * @param key key
      * @throws RedisException 异常
      */
-    public  Map<String, String> hashGetAll(String key) throws RedisException {
+    public Map<String, String> hashGetAll(String key) throws RedisException {
         try {
-            Map<String, String> map=new HashMap<>();
-            Map<Object,Object> objectMap=redisTemplate.opsForHash().entries(key);
+            Map<String, String> map = new HashMap<>();
+            Map<Object, Object> objectMap = redisTemplate.opsForHash().entries(key);
 //            objectMap.keySet();
-            for(Object key1:objectMap.keySet()){
-                if(objectMap.get(key1) instanceof String){
-                    map.put((String)key1,(String)objectMap.get(key1));
-                }else {
-                    map.put((String)key1,JSONObject.toJSONString(objectMap.get(key1)));
+            for (Object key1 : objectMap.keySet()) {
+                if (objectMap.get(key1) instanceof String) {
+                    map.put((String) key1, (String) objectMap.get(key1));
+                } else {
+                    map.put((String) key1, JSONObject.toJSONString(objectMap.get(key1)));
                 }
             }
             return map;
@@ -333,8 +367,10 @@ public class RedisUtil {
             throw new RedisException(e, e.getMessage());
         }
     }
+
     /**
-     *  hasKey
+     * hasKey
+     *
      * @param key key
      * @throws RedisException 异常
      */
@@ -349,15 +385,15 @@ public class RedisUtil {
     }
 
     /**
-     *  delete
+     * delete
+     *
      * @param key key
-
      * @throws RedisException 异常
      */
     public void deleteKey(String key) throws RedisException {
         try {
             redisTemplate.delete(key);
-            logger.error(String.format("调用 redis delete ：key [%s] ",key));
+            logger.error(String.format("调用 redis delete ：key [%s] ", key));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(String.format("调用 redis delete 异常：%s", e.getLocalizedMessage()));
@@ -365,27 +401,29 @@ public class RedisUtil {
         }
     }
 
-    public  void deleteKey(Collection<String>  keys) throws RedisException {
+    public void deleteKey(Collection<String> keys) throws RedisException {
         try {
             redisTemplate.delete(keys);
-            logger.error(String.format("调用 redis delete ：keys [%s] ",keys));
+            logger.error(String.format("调用 redis delete ：keys [%s] ", keys));
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(String.format("调用 redis delete 异常：%s", e.getLocalizedMessage()));
             throw new RedisException(e, e.getMessage());
         }
     }
+
     /**
      * 设置key过期
-     * @param key key
+     *
+     * @param key        key
      * @param needExpire 是否过期
-     * @param day 过期时间
+     * @param day        过期时间
      */
-    private void expire(String key, Boolean needExpire,Integer day) throws RedisException {
+    private void expire(String key, Boolean needExpire, Integer day) throws RedisException {
         try {
-            if (needExpire!=null&&needExpire) {
-                    redisTemplate.expire(key, (day!=null&&day>0?day:7) * 24 * 60 * 60 * 1000, TimeUnit.MILLISECONDS);
-                    logger.error(String.format("调用 redis expire ：key [%s] time 【%s】天",key,day!=null&&day>0?day:7));
+            if (needExpire != null && needExpire) {
+                redisTemplate.expire(key, (day != null && day > 0 ? day : 7) * 24 * 60 * 60 * 1000, TimeUnit.MILLISECONDS);
+                logger.error(String.format("调用 redis expire ：key [%s] time 【%s】天", key, day != null && day > 0 ? day : 7));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -408,4 +446,61 @@ public class RedisUtil {
             throw new RedisException(e, e.getMessage());
         }
     }
+}
+
+@Configuration
+@EnableCaching
+class RedisConfig extends CachingConfigurerSupport {
+
+    @Bean
+    public KeyGenerator simpleKey() {
+        return new KeyGenerator() {
+            @Override
+            public Object generate(Object target, Method method, Object... params) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(target.getClass().getName() + ":");
+                for (Object obj : params) sb.append(obj.toString());
+                return sb.toString();
+            }
+        };
+    }
+
+    @Bean
+    public KeyGenerator objectId() {
+        return new KeyGenerator() {
+            @Override
+            public Object generate(Object target, Method method, Object... params) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(target.getClass().getName() + ":");
+                try {
+                    sb.append(params[0].getClass().getMethod("getId").invoke(params[0]).toString());
+                } catch (ReflectiveOperationException no) {
+                    no.printStackTrace();
+                }
+                return sb.toString();
+            }
+        };
+    }
+
+    @Bean
+    public CacheManager cacheManager(@SuppressWarnings("rawtypes") RedisTemplate redisTemplate) {
+        RedisCacheManager manager = new RedisCacheManager(redisTemplate);
+        manager.setDefaultExpiration(43200);//12小时
+        return manager;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> redisTemplate(
+            RedisConnectionFactory factory) {
+        StringRedisTemplate template = new StringRedisTemplate(factory);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        template.afterPropertiesSet();
+        return template;
+    }
+
 }

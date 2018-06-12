@@ -1,4 +1,4 @@
-package com.saas.common.base;
+package com.saas.common;
 
 
 import org.slf4j.Logger;

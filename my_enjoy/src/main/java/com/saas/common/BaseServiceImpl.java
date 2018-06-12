@@ -1,4 +1,4 @@
-package com.saas.common.base;
+package com.saas.common;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

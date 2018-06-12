@@ -26,7 +26,7 @@ import java.util.List;
  */
 @SpringBootApplication()
 @ComponentScan(basePackages ="com.saas")
-@MapperScan(basePackages = {"com.saas.system.dao"})
+@MapperScan(basePackages = {"com.saas.system.dao","com.saas.ding.dao"})
 public class ServerWebApplication extends WebMvcConfigurerAdapter {
 
 	public static void main(String[] args) throws IOException {
