@@ -1,0 +1,78 @@
+server:
+  port: 8888
+  tomcat:
+    uri-encoding: UTF-8
+
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 8vKVV@ye8
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://rm-m5e898cknp5necdld1o.mysql.rds.aliyuncs.com:3306/ding?useUnicode=true&characterEncoding=utf-8&useSSL=true
+#    primary:
+#      username: root
+#      password: 8vKVV@ye8
+#      driver-class-name: com.mysql.jdbc.Driver
+#      url: jdbc:mysql://rm-m5e898cknp5necdld1o.mysql.rds.aliyuncs.com:3306/dmp?useUnicode=true&characterEncoding=utf-8&useSSL=true
+#    secondary:
+#      username: root
+#      password: 8vKVV@ye8
+#      driver-class-name: com.mysql.jdbc.Driver
+#      url: jdbc:mysql://rm-m5e898cknp5necdld1o.mysql.rds.aliyuncs.com:3306/bpp?useUnicode=true&characterEncoding=utf-8&useSSL=true
+
+    dbcp2:
+      initial-size: 5
+      min-idle: 5
+      max-idle: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 6000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: true
+      pool-prepared-statements: true
+    hikari:
+      maximum-pool-size: 20
+    tomcat:
+      connection-properties: druid.stat.mergesql:true;druid.stat.showSqlMills=5000
+  jta:
+    narayana:
+      xa-resource-orphan-filters: stat,wall,log4j
+  jackson:
+      serialization:
+        INDENT_OUTPUT: true
+      date-format: java.text.SimpleDateFormat
+      deserialization: true
+      generator: true
+      mapper: true
+      parser: true
+
+  redis:
+    host: 39.107.79.189
+    password: Ding1209pf
+    port: 6379
+    database: 0
+    isExpire: true
+    expireDays: 7
+    timeout: 60000
+  hateoas:
+    use-hal-as-default-json-media-type: true
+  http:
+    converters:
+      preferred-json-mapper: jackson
+  mvc:
+    view:
+      prefix: /templates
+      suffix: .ftl
+  resources:
+    static-locations: classpath:/static
+  thymeleaf:
+    cache: false
+    enabled: true
+  jpa:
+    show-sql: true
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mappings/**/*_mapper.xml

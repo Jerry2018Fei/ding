@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.saas.ding.dao.LotteryConfigDao">
+    <resultMap id="lotteryConfig" type="com.saas.ding.entity.LotteryConfig">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="first_max" property="frontSectionMax"/>
+        <result column="first_repeat" property="frontSectionRepeatable"/>
+        <result column="second_max" property="backAreaMax"/>
+        <result column="second_repeat" property="backAreaRepeatable"/>
+        <result column="first_num" property="frontSectionNumber"/>
+        <result column="second_num" property="backAreaNumber"/>
+    </resultMap>
+    <sql id="table">d_lottery_config</sql>
+    <sql id="column">id,'name',first_max,first_repeat,second_max,second_repeat,first_num,second_num</sql>
+
+    <insert id="insert">
+        insert into
+        <include refid="table"/>
+        (
+        <include refid="column"/>
+        )
+        values (#{id},#{name},#{frontSectionMax},#{frontSectionRepeatable},
+        #{backAreaMax},#{backAreaRepeatable},#{frontSectionNumber},#{backAreaNumber})
+    </insert>
+
+    <update id="update">
+        update
+        <include refid="table"/>
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="name != null and name.length()>0">name=#{name} ,</if>
+            <if test="frontSectionMax != null ">first_max=#{frontSectionMax} ,</if>
+            <if test="frontSectionRepeatable != null ">first_repeat=#{frontSectionRepeatable} ,</if>
+            <if test="backAreaMax != null ">second_max=#{backAreaMax} ,</if>
+            <if test="backAreaRepeatable != null ">second_repeat=#{backAreaRepeatable} ,</if>
+            <if test="frontSectionNumber != null ">first_num=#{frontSectionNumber} ,</if>
+            <if test="backAreaNumber != null ">second_num=#{backAreaNumber} ,</if>
+        </trim>
+    </update>
+
+    <select id="selectById" resultMap="lotteryConfig">
+        select <include refid="column"/> from <include refid="table"/>
+        where id=#{id}
+    </select>
+
+    <select id="selectAll" resultMap="lotteryConfig">
+        select <include refid="column"/> from <include refid="table"/>
+    </select>
+
+    <!---->
+    <select id="countByName" resultType="int">
+        select count(1)  from <include refid="table"/> where name =#{name}
+    </select>
+</mapper>
