@@ -62,15 +62,18 @@ spring:
   http:
     converters:
       preferred-json-mapper: jackson
-  mvc:
-    view:
-      prefix: /templates
-      suffix: .ftl
+#  mvc:
+#    view:
+#      prefix: /templates
+#      suffix: .html
   resources:
     static-locations: classpath:/static
   thymeleaf:
     cache: false
     enabled: true
+#    suffix: .html
+#    prefix: /templates
+
   jpa:
     show-sql: true
 mybatis:

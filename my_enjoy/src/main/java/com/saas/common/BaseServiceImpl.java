@@ -40,7 +40,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 	 */
 	@Override
 	@Transactional
-	public int insert(T entity) {
+	public int insert(T entity) throws Exception {
 		return dao.insert(entity);
 	}
 
@@ -51,7 +51,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 	 */
 	@Override
 	@Transactional
-	public int deleteById(Serializable id) {
+	public int deleteById(Serializable id) throws Exception {
 		return dao.deleteById(id);
 	}
 
@@ -62,7 +62,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 	 */
 	@Override
 	@Transactional
-	public int update(T entity) {
+	public int update(T entity) throws Exception {
 		return dao.update(entity);
 	}
 
@@ -71,7 +71,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 	 * @return list
 	 */
 	@Override
-	public List<T> getAll() {
+	public List<T> getAll() throws Exception {
 		return dao.getAll();
 	}
 
@@ -81,7 +81,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 	 * @return t
 	 */
 	@Override
-	public T getById(Serializable id) {
+	public T getById(Serializable id) throws Exception {
 		return dao.getById(id);
 	}
 
@@ -91,7 +91,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 	 * @return 返回list
 	 */
 	@Override
-	public List<T> getByParam(Map<String, Object> params) {
+	public List<T> getByParam(Map<String, Object> params) throws Exception {
 		return dao.getByParam(params);
 	}
 	/**
@@ -100,13 +100,13 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
 	 * @return 返回分页信息
 	 */
 	@Override
-	public PageInfo<T> getPageByParam(Map<String, Object> params,Integer pageNum,Integer pageSize) {
+	public PageInfo<T> getPageByParam(Map<String, Object> params,Integer pageNum,Integer pageSize) throws Exception {
 		PageHelper.startPage(pageNum,pageSize);
 		return new PageInfo<>(this.getByParam(params));
 	}
 
 	@Override
-	public int updateByMap(Map<String, Object> map)  {
+	public int updateByMap(Map<String, Object> map) throws Exception {
 		return  dao.updateByMap(map);
 	}
 

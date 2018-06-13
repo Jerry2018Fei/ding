@@ -7,4 +7,5 @@ import com.saas.system.annotation.BppDao;
 @BppDao
 public interface LotteryConfigDao extends IBaseDao<LotteryConfig> {
 
+    Integer countByName(String name);
 }

@@ -12,7 +12,7 @@
         <result column="second_num" property="backAreaNumber"/>
     </resultMap>
     <sql id="table">d_lottery_config</sql>
-    <sql id="column">id,'name',first_max,first_repeat,second_max,second_repeat,first_num,second_num</sql>
+    <sql id="column">id,name,first_max,first_repeat,second_max,second_repeat,first_num,second_num</sql>
 
     <insert id="insert">
         insert into
@@ -37,13 +37,15 @@
             <if test="backAreaNumber != null ">second_num=#{backAreaNumber} ,</if>
         </trim>
     </update>
-
-    <select id="selectById" resultMap="lotteryConfig">
+    <delete id="deleteById" >
+        delete  from <include refid="table"/> where id=#{id}
+    </delete>
+    <select id="getById" resultMap="lotteryConfig">
         select <include refid="column"/> from <include refid="table"/>
         where id=#{id}
     </select>
 
-    <select id="selectAll" resultMap="lotteryConfig">
+    <select id="getAll" resultMap="lotteryConfig">
         select <include refid="column"/> from <include refid="table"/>
     </select>
 

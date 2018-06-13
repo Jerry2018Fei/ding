@@ -3,28 +3,24 @@ layui.config({
 }).use(['form','layer','jquery','layedit','laydate'],function(){
 	var form = layui.form,
 		layer = parent.layer === undefined ? layui.layer : parent.layer,
-		// laypage = layui.laypage,
-		// layedit = layui.layedit,
-		// laydate = layui.laydate,
+
 		$ = layui.jquery;
 
-	//创建一个编辑器
- 	// var editIndex = layedit.build('links_content');
- 	var addLinksArray = [],lotteryConfig;
- 	form.on("submit(lotteryConfig)",function(data){
+
+ 	form.on("submit(*)",function(data){
 
         var lotteryConfig={};
         lotteryConfig.name=$("#name").val();
-        lotteryConfig.nickName=$("#nickName").val();
-        lotteryConfig.keyRule=$("#rowKeyRule").val();
-        lotteryConfig.isSplit=$("#isSplit").val();
         lotteryConfig.frontSection=$("#frontSection").val();
-        lotteryConfig.frontSectionRange=$("#frontSection_min").val()+";"+$("#frontSection_max").val();
-        lotteryConfig.frontSectionRepeatable=$("#frontSectionRepeatable").val();
+        lotteryConfig.frontSectionMax=$("#frontSectionMax").val();
+        lotteryConfig.frontSectionNumber=$("#frontSectionNum").val();
+        lotteryConfig.frontSectionRepeatable=$("input[name='frontSectionRepeatable']:checked").val();
         lotteryConfig.backArea=$("#backArea").val();
-        lotteryConfig.backAreaRange=$("#backArea_min").val()+";"+$("#backArea_max").val();
-        lotteryConfig.backAreaRepeatable=$("#backAreaRepeatable").val();
- 		//弹出loading
+        lotteryConfig.backAreaMax=$("#backAreaMax").val();
+        lotteryConfig.backAreaRepeatable=$("input[name='backAreaRepeatable']:checked").val();
+        lotteryConfig.backAreaNumber=$("#backAreaNum").val();
+        console.log(JSON.stringify(lotteryConfig));
+        //弹出loading
  		var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
         setTimeout(function(){
             $.ajax({
@@ -42,6 +38,7 @@ layui.config({
                         top.layer.close(index);
                         top.layer.msg("添加成功！");
                         layer.closeAll("iframe");
+                        parent.location.reload();
                     }else {
                         top.layer.msg("添加失败["+data.message+"]!");
                     }

@@ -10,10 +10,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -68,6 +73,45 @@ public class WebConfig extends WebMvcConfigurationSupport {
         pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         return pool;
     }
+
+//    /**
+//     * 设置视图解析器
+//     * @param templateEngine
+//     * @return
+//     */
+//    @Bean
+//    public ViewResolver viewResolver(SpringTemplateEngine templateEngine){
+//        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+//        resolver.setTemplateEngine(templateEngine(templateResolver()));
+//        return resolver;
+//    }
+//
+//    /**
+//     * 设置模板引擎
+//     * @param templateResolver
+//     * @return
+//     */
+//    @Bean
+//    public SpringTemplateEngine templateEngine(TemplateResolver templateResolver){
+//        SpringTemplateEngine engine = new SpringTemplateEngine();
+//        engine.setTemplateResolver(templateResolver);
+//        return engine;
+//    }
+//
+//    /**
+//     * 模板解析引擎
+//     * @return
+//     */
+//    @Bean
+//    public TemplateResolver templateResolver(){
+//        TemplateResolver resolver = new SpringResourceTemplateResolver();
+//        resolver.setPrefix("/templates/");//设置地址前缀
+//        resolver.setSuffix(".html");//设置后缀
+//        resolver.setCacheable(false);//设置不缓存
+//        resolver.setTemplateMode("HTML5");
+//        return resolver;
+//
+//    }
 }
 
 @Component

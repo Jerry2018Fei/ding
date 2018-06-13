@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LotteryConfigUtils {
-    private static Logger logger = LoggerFactory.getLogger(LotteryConfigUtils.class);
+public class LotteryUtils {
+    private static Logger logger = LoggerFactory.getLogger(LotteryUtils.class);
 
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>所有的彩种信息</title>
+    <meta charset="utf-8"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="/static/css/font_eolqem241z66flxr.css" media="all" />
+    <link rel="stylesheet" href="/static/css/news.css" media="all" />
+</head>
+<body class="childrenBody">
+<form class="layui-form layui-container" style="width:80%;">
+    <input type="hidden" id="id" name="id" th:value="${config.getId()}"/>
+    <br/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">彩种名称</label>
+        <div class="layui-input-block">
+            <input type="text" id="name" name="name" th:value="${config.name}"
+                   class="layui-input " lay-verify="required" placeholder="请输入彩种名称"/>
+        </div>
+    </div>
+    <label class="layui-form-label" style="width: 100px;">前区配置信息</label>
+    <div class="layui-row">
+
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="frontSection" name="frontSection" value="红球" class="layui-input "
+                       lay-verify="required" placeholder="请输入" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">最大值</label>
+            <div class="layui-input-block">
+
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" id="frontSectionMax" name="frontSectionMax" lay-verify="required"
+                           placeholder="请输入" autocomplete="off" class="layui-input" th:value="${config.frontSectionMax}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">个数</label>
+            <div class="layui-input-block">
+
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" id="frontSectionNum" name="frontSectionNum" placeholder="请输入" lay-verify="required"
+                           autocomplete="off" class="layui-input" th:value="${config.frontSectionNumber}"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">重复</label>
+            <div class="layui-input-block" th:if="${config.frontSectionRepeatable} eq 1">
+                <input type="radio" id="frontSectionRepeatable" name="frontSectionRepeatable"  value="1" title="是"
+                        checked="checked" />
+                <input type="radio" id="frontSectionRepeatable" name="frontSectionRepeatable" value="0" title="否"
+                        />
+
+            </div>
+            <div class="layui-input-block" th:if="${config.frontSectionRepeatable} eq 0">
+
+                <input type="radio" id="frontSectionRepeatable" name="frontSectionRepeatable"  value="1" title="是"
+                         />
+                <input type="radio" id="frontSectionRepeatable" name="frontSectionRepeatable" value="0" title="否"
+                        checked="checked"/>
+            </div>
+        </div>
+    </div>
+
+
+    <label class="layui-form-label" style="width: 100px;">后区配置信息</label>
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input type="text" id="backArea" name="backArea" class="layui-input " value="蓝球" lay-verify="required"
+                       placeholder="请输入" readonly="readonly"/>
+            </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">最大值</label>
+            <div class="layui-input-block">
+
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" id="backAreaMax" name="backAreaMax" placeholder="请输入" lay-verify="required"
+                           autocomplete="off" class="layui-input" th:value="${config.getBackAreaMax()}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">个数</label>
+            <div class="layui-input-block">
+
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" id="backAreaNum" name="backAreaNum" placeholder="请输入" lay-verify="required"
+                           autocomplete="off" class="layui-input" th:value="${config.getBackAreaNumber()}"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label">重复</label>
+            <div class="layui-input-block" >
+                <input type="radio" id="backAreaRepeatable" name="backAreaRepeatable" value="1" title="是"
+                       th:checked="${config.backAreaRepeatable}==1?'true':'false'"   />
+                <input type="radio" id="backAreaRepeatable" name="backAreaRepeatable" value="0" title="否"
+                       th:checked="${config.backAreaRepeatable}==0?'true':'false'" />
+            </div>
+
+        </div>
+    </div>
+    <br/>
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md4">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="lotteryConfig">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+<script type="text/javascript" src="/static/js/lottery/update.js"></script>
+</body>
+</html>

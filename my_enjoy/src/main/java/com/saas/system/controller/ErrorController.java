@@ -24,6 +24,7 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
     private static final String ERROR_STATUS_CODE="javax.servlet.error.status_code";
     private static final Integer ERROR_STATUS_CODE_404=404;
     private static final String ERROR_REQUEST_URI="javax.servlet.error.request_uri";
+    private static final String SERVLET_ERROR_EXCEPTION="javax.servlet.error.exception";
     private static final String SERVLET_EXCEPTION="org.springframework.web.servlet.DispatcherServlet.EXCEPTION";
     private static final String SERVLET_ERROR="org.springframework.boot.autoconfigure.web.DefaultErrorAttributes.ERROR";
     private static final String ERROR_MESSAGE="javax.servlet.error.message";
@@ -43,6 +44,8 @@ public class ErrorController implements org.springframework.boot.autoconfigure.w
             logger.error(String.format("路径:%s找不到", uri));
         }else if (!StringUtils.isEmpty(request.getAttribute(SERVLET_ERROR) )) {
             logger.error(String.format("错误信息:%s",uri+" "+request.getAttribute(SERVLET_ERROR)));
+        }else if (!StringUtils.isEmpty(request.getAttribute(SERVLET_ERROR_EXCEPTION) )) {
+            logger.error(String.format("错误信息:%s",uri+" "+request.getAttribute(SERVLET_ERROR_EXCEPTION)));
         }else if (request.getAttribute(SERVLET_EXCEPTION) instanceof MissingServletRequestParameterException) {
             logger.error(String.format("请求参数不完整:%s",request.getAttribute(ERROR_MESSAGE)));
         }else {

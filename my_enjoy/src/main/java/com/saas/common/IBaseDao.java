@@ -20,7 +20,7 @@ public interface IBaseDao<T> {
 	 * @param entity 插入实体
 	 * @return int 返回值
 	 */
-	int insert(T entity);
+	int insert(T entity) throws Exception;
 
 
 	/**
@@ -30,7 +30,7 @@ public interface IBaseDao<T> {
 	 * @param id 主键ID
 	 * @return 操作结果
 	 */
-	int deleteById(Serializable id);
+	int deleteById(Serializable id) throws Exception;
 
 
 	/**
@@ -40,7 +40,7 @@ public interface IBaseDao<T> {
 	 * @param entity 更新实体
 	 * @return 返回值
 	 */
-	int update(T entity);
+	int update(T entity) throws Exception;
 
 	/**
 	 * Auth: dingpengfei
@@ -48,7 +48,7 @@ public interface IBaseDao<T> {
 	 * 获取所有数据
 	 * @return 查询所有数据
 	 */
-	List<T> getAll();
+	List<T> getAll() throws Exception;
 
 	/**
 	 * Auth: dingpengfei
@@ -57,14 +57,14 @@ public interface IBaseDao<T> {
 	 * param id id
 	 * return 实体
 	 */
-	T getById(Serializable id);
+	T getById(Serializable id) throws Exception;
 	/**
 	 * auth: dingpengfei
 	 * date: 2017/9/4 15:13
 	 * param: params 参数map
 	 * return: list 集合
 	 **/
-	List<T> getByParam(Map<String, Object> params);
+	List<T> getByParam(Map<String, Object> params) throws Exception;
 
 
 	/**
@@ -74,5 +74,5 @@ public interface IBaseDao<T> {
 	 * Param: map 参数列表
 	 * Return: void
 	 **/
-	int updateByMap(Map<String, Object> map);
+	int updateByMap(Map<String, Object> map) throws Exception;
 }
