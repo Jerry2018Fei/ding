@@ -9,7 +9,7 @@ layui.config({
 
  	form.on("submit",function(data){
         console.log(data);
-        alert(1);
+        // alert(1);
         var lotteryConfig={};
         lotteryConfig.id=$("#id").val();
         lotteryConfig.name=$("#name").val();
@@ -22,34 +22,34 @@ layui.config({
         lotteryConfig.backAreaRepeatable=$("input[name='backAreaRepeatable']:checked").val();
         lotteryConfig.backAreaNumber=$("#backAreaNum").val();
         //弹出loading
- 		// var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
-        // setTimeout(function(){
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "/lottery/update.json",
-        //         data: JSON.stringify(lotteryConfig),
-        //         dataType: "json",
-        //         headers : {
-        //             'Content-Type' : 'application/json;charset=utf-8'
-        //         },
-        //         success: function (data) {
-        //             // console.log(data);
-        //             if(data.success){
-        //                 top.layer.close(index);
-        //                 top.layer.msg("添加成功！");
-        //                 layer.closeAll("iframe");
-        //                 parent.location.reload();
-        //             }else {
-        //                 top.layer.msg("添加失败["+data.message+"]!");
-        //             }
-        //
-        //         },
-        //         error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //             top.layer.msg(XMLHttpRequest['responseText']);
-        //         }
-        //     });
-        //
-        // },1);
+ 		var index = top.layer.msg('数据提交中，请稍候',{icon: 16,time:false,shade:0.8});
+        setTimeout(function(){
+            $.ajax({
+                type: "POST",
+                url: "/lottery/update.json",
+                data: JSON.stringify(lotteryConfig),
+                dataType: "json",
+                headers : {
+                    'Content-Type' : 'application/json;charset=utf-8'
+                },
+                success: function (data) {
+                    // console.log(data);
+                    if(data.success){
+                        top.layer.close(index);
+                        top.layer.msg("添加成功！");
+                        layer.closeAll("iframe");
+                        parent.location.reload();
+                    }else {
+                        top.layer.msg("添加失败["+data.message+"]!");
+                    }
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    top.layer.msg(XMLHttpRequest['responseText']);
+                }
+            });
+
+        },1);
 
  		return false;
  	})

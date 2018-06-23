@@ -1,11 +1,15 @@
 package com.saas.ding.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.saas.ding.LotterySimpleResult;
 import com.saas.ding.compoment.LotteryUtils;
 import com.saas.ding.entity.LotteryConfig;
 import com.saas.ding.service.LotteryConfigService;
 import com.saas.system.pojo.ServerResult;
 import com.saas.utils.string.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -94,5 +99,48 @@ public class LotteryController {
         }
     }
 
+
+    @RequestMapping("data.html")
+    public String toData(Model model) throws Exception {
+        List<LotteryConfig> configs = lotteryConfigService.getSimpleConfigs();
+        model.addAttribute("configs", configs);
+        return "lottery/data";
+    }
+
+    @RequestMapping("getById.json")
+    @ResponseBody
+    public LotteryConfig getById(String id) {
+        try {
+            return lotteryConfigService.getById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @RequestMapping("data.json")
+    @ResponseBody
+    public LotterySimpleResult data(String id, HttpServletRequest request) {
+        try {
+            LotteryConfig config=lotteryConfigService.getById(id);
+            return lotteryUtils.getSingleData(config,request.getSession());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    @RequestMapping("dataProcess.json")
+    @ResponseBody
+    public LotterySimpleResult dataProcess(String key, HttpServletRequest request) {
+        try {
+String value=request.getSession().getAttribute(key).toString();
+logger.info(value);
+            LotterySimpleResult config=JSONObject.parseObject(value,LotterySimpleResult.class);
+            return config;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

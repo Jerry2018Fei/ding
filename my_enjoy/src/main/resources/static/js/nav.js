@@ -37,7 +37,7 @@ var navs = [
             {
                 "title" : "数据触发设置",
                 "icon" : "&#xe631;",
-                "href" : "",
+                "href" : "/lottery/data.html",
                 "spread" : false
             },{
                 "title" : "所有彩种",

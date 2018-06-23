@@ -7,8 +7,8 @@ layui.config({
 		$ = layui.jquery;
 
 
- 	form.on("submit(*)",function(data){
-
+ 	form.on("submit(lotteryConfig)",function(data){
+console.log(123);
         var lotteryConfig={};
         lotteryConfig.name=$("#name").val();
         lotteryConfig.frontSection=$("#frontSection").val();

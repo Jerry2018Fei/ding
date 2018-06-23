@@ -7,11 +7,17 @@ import com.saas.utils.string.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class LotteryConfigServiceImpl extends BaseServiceImpl<LotteryConfig> implements LotteryConfigService {
     @Resource
     private LotteryConfigDao lotteryConfigDao;
+
+    @Override
+    public List<LotteryConfig> getSimpleConfigs() {
+        return lotteryConfigDao.getSimpleConfigs();
+    }
 
     @Override
     public Integer countByName(String name) {

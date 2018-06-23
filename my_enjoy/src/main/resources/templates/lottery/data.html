@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>所有的彩种信息</title>
+    <meta charset="utf-8"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="/static/css/font_eolqem241z66flxr.css" media="all"/>
+    <link rel="stylesheet" href="/static/css/news.css" media="all"/>
+</head>
+<body class="childrenBody">
+<form class="layui-form" action="">
+    <blockquote class="layui-elem-quote news_search">
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <select lay-filter="test" name="configId" id="configId" lay-verify="required">
+                    <option value=""></option>
+                    <option th:each="config:${configs}" th:value="${config.id}" th:text="${config.name}"  >-</option>
+                </select>
+                <!--<input type="text" value="" placeholder="请输入关键字" class="layui-input search_input"/>-->
+            </div>
+            <!--<a class="layui-btn get_btn">生成数据</a>-->
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn get_btn" style="background-color:#5FB878">生成数据</a>
+        </div>
+        <div class="layui-inline">
+            <a class="layui-btn clear_btn" style="background-color:#5FB878">清空数据</a>
+        </div>
+    </blockquote>
+</form>
+
+
+<div class="layui-form config_list">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>前区数量</th>
+            <th>前区最大值</th>
+            <th>前区可否重复</th>
+            <th>后区数量</th>
+            <th>后区最大值</th>
+            <th>后区可否重复</th>
+        </tr>
+        </thead>
+        <tbody id="t_body" class="links_content">
+        <tr>
+            <td colspan="10">暂无数据</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="layui-form get_data">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>彩种名称</th>
+            <th>生成数据</th>
+            <th>状态</th>
+
+        </tr>
+        </thead>
+        <tbody id="t_body2" class="links_content2">
+        <tr>
+            <td colspan="4">暂无数据</td>
+            <!--<td>双色球</td>-->
+            <!--<td>23 5 19 20 3 16，12</td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+<script type="text/javascript" src="/static/js/lottery/data.js"></script>
+<script id="demo" type="text/html">
+    <tr id="{{d.id}}">
+        <td align="left">{{d.id}}</td>
+        <td>{{d.name}}</td>
+        <td>{{d.frontSectionNumber}}</td>
+        <td>{{d.frontSectionMax}}</td>
+        <td>
+            {{# if(d.frontSectionRepeatable === 1){ }}
+            是
+            {{# } }}
+            {{# if(d.frontSectionRepeatable !== 1){ }}
+            否
+            {{# } }}
+        </td>
+        <td>{{d.backAreaNumber}}</td>
+        <td>{{d.backAreaMax}}</td>
+        <td>
+            {{# if(d.backAreaRepeatable === 1){ }}
+            是
+            {{# } }}
+            {{# if(d.backAreaRepeatable !== 1){ }}
+            否
+            {{# } }}
+        </td>
+
+
+    </tr>
+
+</script>
+<script id="demo2" type="text/html">
+    <tr id="lottery_{{d.id}}">
+        <td>{{d.id}}</td>
+        <td>{{d.name}}</td>
+        <td>{{d.result}}</td>
+        <td>
+            {{# if(d.status ){ }}
+            数据处理完成
+            {{# } }}
+            {{# if(!d.status){ }}
+            数据处理中
+            {{# } }}
+        </td>
+
+    </tr>
+
+</script>
+</body>
+</html>

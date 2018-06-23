@@ -48,6 +48,9 @@
     <select id="getAll" resultMap="lotteryConfig">
         select <include refid="column"/> from <include refid="table"/>
     </select>
+    <select id="getSimpleConfigs" resultMap="lotteryConfig">
+        select id,name from <include refid="table"/>
+    </select>
 
     <!---->
     <select id="countByName" resultType="int">
